@@ -14,7 +14,8 @@ import {
   Edit,
   FirstPage,
   LastPage,
-  Search
+  Search,
+  Check
 } from './components/index';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
@@ -31,7 +32,8 @@ const tableIcons = {
   )),
   ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
   Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
+  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />)
 };
 
 export default function App() {
@@ -54,16 +56,13 @@ export default function App() {
         <Appbar />
         <Switch>
           <Route
-            exact
-            path="/"
+            path="(/|/Customers)"
             render={() => (
-              <ListCustomers customers={customers} tableIcons={tableIcons} />
-            )}
-          />
-          <Route
-            path="/Customers"
-            render={() => (
-              <ListCustomers customers={customers} tableIcons={tableIcons} />
+              <ListCustomers
+                fetchCustomer={fetchCustomer}
+                customers={customers}
+                tableIcons={tableIcons}
+              />
             )}
           />
           <Route

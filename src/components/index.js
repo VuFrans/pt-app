@@ -12,6 +12,7 @@ import Edit from '@material-ui/icons/Edit';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
+import Check from '@material-ui/icons/Check';
 
 export {
   ListCustomers,
@@ -27,5 +28,6 @@ export {
   Edit,
   FirstPage,
   LastPage,
-  Search
+  Search,
+  Check
 };
