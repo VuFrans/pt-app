@@ -1,5 +1,8 @@
 import React from 'react';
 import MaterialTable from 'material-table';
+import Button from '@material-ui/core/Button';
+import AddTraining from './AddTraining';
+import { render } from '@testing-library/react';
 
 export default function ListCustomers(props) {
   const columns = [
@@ -11,6 +14,16 @@ export default function ListCustomers(props) {
     { title: 'Postcode', field: 'postcode' },
     { title: 'City', field: 'city' }
   ];
+
+  const addTraining = (link, customer) => {
+    fetch('https://customerrest.herokuapp.com/api/trainings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(customer)
+    })
+      .then(res => props.fetchCustomer())
+      .catch(err => console.error(err));
+  };
 
   return (
     <div style={{ margin: '50px' }}>
@@ -30,30 +43,34 @@ export default function ListCustomers(props) {
                   .catch(err => console.error(err));
               }
             }
+          },
+          {
+            icon: props.tableIcons.Edit
+          },
+          {
+            icon: () => (
+              <Button size="small" color="primary" label="TEST">
+                ADD TRAINING
+              </Button>
+            ),
+            onClick: (event, rowData) =>
+              render(
+                <AddTraining
+                  customer={rowData.links[0].href}
+                  addTraining={addTraining}
+                  firstname={rowData.firstname}
+                  lastname={rowData.lastname}
+                />
+              )
           }
         ]}
         editable={{
-          onRowAdd: newData =>
+          onRowAdd: rowData =>
             new Promise(resolve => {
               setTimeout(() => {
                 resolve();
                 fetch('https://customerrest.herokuapp.com/api/customers', {
                   method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify(newData)
-                })
-                  .then(res => props.fetchCustomer())
-                  .catch(err => console.error(err));
-              }, 600);
-            }),
-          onRowUpdate: rowData =>
-            new Promise(resolve => {
-              setTimeout(() => {
-                resolve();
-                fetch(rowData.links[0].href, {
-                  method: 'PUT',
                   headers: {
                     'Content-Type': 'application/json'
                   },
@@ -63,6 +80,9 @@ export default function ListCustomers(props) {
                   .catch(err => console.error(err));
               }, 600);
             })
+        }}
+        options={{
+          actionsCellStyle: { paddingRight: '50px' }
         }}
       />
     </div>
