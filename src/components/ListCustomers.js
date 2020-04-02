@@ -45,11 +45,8 @@ export default function ListCustomers(props) {
             }
           },
           {
-            icon: props.tableIcons.Edit
-          },
-          {
             icon: () => (
-              <Button size="small" color="primary" label="TEST">
+              <Button size="small" color="primary">
                 ADD TRAINING
               </Button>
             ),
@@ -71,6 +68,21 @@ export default function ListCustomers(props) {
                 resolve();
                 fetch('https://customerrest.herokuapp.com/api/customers', {
                   method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(rowData)
+                })
+                  .then(res => props.fetchCustomer())
+                  .catch(err => console.error(err));
+              }, 600);
+            }),
+          onRowUpdate: rowData =>
+            new Promise(resolve => {
+              setTimeout(() => {
+                resolve();
+                fetch(rowData.links[0].href, {
+                  method: 'PUT',
                   headers: {
                     'Content-Type': 'application/json'
                   },
