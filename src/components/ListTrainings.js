@@ -9,9 +9,9 @@ export default function ListTrainings(props) {
   }, []);
 
   const fetchTrainings = () => {
-    fetch(`https://customerrest.herokuapp.com/api/trainings`)
+    fetch(`https://customerrest.herokuapp.com/gettrainings`)
       .then(res => res.json())
-      .then(data => setTrainings(data.content))
+      .then(data => setTrainings(data))
       .catch(err => console.error(err));
   };
 
@@ -22,7 +22,15 @@ export default function ListTrainings(props) {
       field: 'date',
       type: 'date'
     },
-    { title: 'Duration', field: 'duration' }
+    { title: 'Duration', field: 'duration' },
+    {
+      title: 'First name',
+      field: 'customer.firstname'
+    },
+    {
+      title: 'Last name',
+      field: 'customer.lastname'
+    }
   ];
 
   return (
@@ -32,6 +40,25 @@ export default function ListTrainings(props) {
         title="Trainings"
         columns={columns}
         data={trainings}
+        actions={[
+          {
+            icon: props.tableIcons.Delete,
+            tooltip: 'Delete Training',
+            onClick: (event, rowData) => {
+              if (window.confirm('Are you sure ?')) {
+                fetch(
+                  `https://customerrest.herokuapp.com/api/trainings/${rowData.id}`,
+                  { method: 'DELETE' }
+                )
+                  .then(res => fetchTrainings())
+                  .catch(err => console.error(err));
+              }
+            }
+          }
+        ]}
+        options={{
+          actionsCellStyle: { padding: '20px' }
+        }}
       />
     </div>
   );
