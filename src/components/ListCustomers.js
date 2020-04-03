@@ -55,8 +55,7 @@ export default function ListCustomers(props) {
                 <AddTraining
                   customer={rowData.links[0].href}
                   addTraining={addTraining}
-                  firstname={rowData.firstname}
-                  lastname={rowData.lastname}
+                  customerName={[rowData.firstname, ' ', rowData.lastname]}
                 />
               )
           }

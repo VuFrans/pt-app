@@ -9,14 +9,16 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
-  KeyboardDatePicker
+  KeyboardDateTimePicker
 } from '@material-ui/pickers';
 import moment from 'moment';
+
+const today = moment().format('DD.MM.YYYY HH:MM a');
 
 export default function AddTraining(props) {
   const [open, setOpen] = useState(false);
   const [training, setTraining] = useState({
-    date: Date.now(),
+    date: today,
     activity: '',
     duration: '',
     customer: props.customer
@@ -34,6 +36,10 @@ export default function AddTraining(props) {
     setTraining({ ...training, [e.target.name]: e.target.value });
   };
 
+  const handleDateChange = date => {
+    setTraining({ ...training, date: date });
+  };
+
   const addTraining = () => {
     props.addTraining(props.customer, training);
     handleClose();
@@ -48,17 +54,19 @@ export default function AddTraining(props) {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">
-          Add Training for {props.firstname} {props.lastname}
+          Add Training for {props.customerName}
         </DialogTitle>
         <DialogContent>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              format="dd.mm.yyyy"
+            <KeyboardDateTimePicker
+              format="dd.MM.yyyy HH:MM a"
               margin="dense"
               id="date-picker-dialog"
               label="Date"
-              value={training.date}
-              onChange={e => handleInputChange(moment(e).format('DD.MM.YYYY'))}
+              defaultValue={training.date}
+              inputValue={training.date}
+              onChange={e => handleDateChange(moment(e).format())}
+              disablePast
             />
           </MuiPickersUtilsProvider>
           <TextField
