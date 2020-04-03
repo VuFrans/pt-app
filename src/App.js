@@ -88,7 +88,10 @@ export default function App() {
               />
             )}
           />
-          <Route path="/Calendar" component={Calendar} />
+          <Route
+            path="/Calendar"
+            render={() => <Calendar trainings={trainings} />}
+          />
           <Route render={() => <h1>Page not found</h1>} />
         </Switch>
       </BrowserRouter>
