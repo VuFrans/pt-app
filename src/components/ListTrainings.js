@@ -1,20 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import MaterialTable from 'material-table';
 
 export default function ListTrainings(props) {
-  const [trainings, setTrainings] = useState([]);
-
-  useEffect(() => {
-    fetchTrainings();
-  }, []);
-
-  const fetchTrainings = () => {
-    fetch(`https://customerrest.herokuapp.com/gettrainings`)
-      .then(res => res.json())
-      .then(data => setTrainings(data))
-      .catch(err => console.error(err));
-  };
-
   const columns = [
     { title: 'Activity', field: 'activity' },
     {
@@ -39,7 +26,7 @@ export default function ListTrainings(props) {
         icons={props.tableIcons}
         title="Trainings"
         columns={columns}
-        data={trainings}
+        data={props.trainings}
         actions={[
           {
             icon: props.tableIcons.Delete,
@@ -50,7 +37,7 @@ export default function ListTrainings(props) {
                   `https://customerrest.herokuapp.com/api/trainings/${rowData.id}`,
                   { method: 'DELETE' }
                 )
-                  .then(res => fetchTrainings())
+                  .then(res => props.fetchTrainings())
                   .catch(err => console.error(err));
               }
             }

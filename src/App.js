@@ -38,10 +38,22 @@ const tableIcons = {
 
 export default function App() {
   const [customers, setCustomers] = useState([]);
+  const [trainings, setTrainings] = useState([]);
 
   useEffect(() => {
     fetchCustomer();
   }, []);
+
+  useEffect(() => {
+    fetchTrainings();
+  }, []);
+
+  const fetchTrainings = () => {
+    fetch(`https://customerrest.herokuapp.com/gettrainings`)
+      .then(res => res.json())
+      .then(data => setTrainings(data))
+      .catch(err => console.error(err));
+  };
 
   const fetchCustomer = async () => {
     await fetch('https://customerrest.herokuapp.com/api/customers')
@@ -68,7 +80,12 @@ export default function App() {
           <Route
             path="/Trainings"
             render={() => (
-              <ListTrainings tableIcons={tableIcons} customers={customers} />
+              <ListTrainings
+                tableIcons={tableIcons}
+                customers={customers}
+                trainings={trainings}
+                fetchTrainings={fetchTrainings}
+              />
             )}
           />
           <Route path="/Calendar" component={Calendar} />
