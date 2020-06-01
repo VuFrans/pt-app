@@ -15,7 +15,7 @@ import {
   FirstPage,
   LastPage,
   Search,
-  Check
+  Check,
 } from './components/index';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
@@ -33,33 +33,34 @@ const tableIcons = {
   ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
   Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
   SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />)
+  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
 };
 
 export default function App() {
   const [customers, setCustomers] = useState([]);
   const [trainings, setTrainings] = useState([]);
 
-  useEffect(() => {
-    fetchCustomer();
-  }, []);
+  let basePath = process.env.NODE_ENV === 'development' ? '' : '/pt-app';
+
+  const baseUrl = 'https://customerrest.herokuapp.com';
 
   useEffect(() => {
+    fetchCustomer();
     fetchTrainings();
   }, []);
 
   const fetchTrainings = () => {
-    fetch(`https://customerrest.herokuapp.com/gettrainings`)
-      .then(res => res.json())
-      .then(data => setTrainings(data))
-      .catch(err => console.error(err));
+    fetch(`${baseUrl}/gettrainings`)
+      .then((res) => res.json())
+      .then((data) => setTrainings(data))
+      .catch((err) => console.error(err));
   };
 
   const fetchCustomer = async () => {
-    await fetch('https://customerrest.herokuapp.com/api/customers')
-      .then(res => res.json())
-      .then(data => setCustomers(data.content))
-      .catch(err => console.error(err));
+    await fetch(`${baseUrl}/api/customers`)
+      .then((res) => res.json())
+      .then((data) => setCustomers(data.content))
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -68,7 +69,7 @@ export default function App() {
         <Appbar />
         <Switch>
           <Route
-            path="(/|/Customers)"
+            path={`${basePath}/(|Customers)`}
             render={() => (
               <ListCustomers
                 fetchCustomer={fetchCustomer}
@@ -78,7 +79,7 @@ export default function App() {
             )}
           />
           <Route
-            path="/Trainings"
+            path={`${basePath}/Trainings`}
             render={() => (
               <ListTrainings
                 tableIcons={tableIcons}
@@ -89,7 +90,7 @@ export default function App() {
             )}
           />
           <Route
-            path="/Calendar"
+            path={`${basePath}/Calendar`}
             render={() => <Calendar trainings={trainings} />}
           />
           <Route render={() => <h1>Page not found</h1>} />
